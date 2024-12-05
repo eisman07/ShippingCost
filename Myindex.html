@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        .head {
+            font-size: 30px;
+            font-family: 'Times New Roman', Times, serif;
+            color: whitesmoke;
+            text-shadow: 2px 2px 8px #FF0000;
+        }
+        
+        .div1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 600px;
+            background-color: darkgray;
+            text-align: center;
+            border-radius: 55px;
+            padding: 20px;
+        }
+        
+        .inputC {
+            width: 300px;
+            height: 30px;
+            font-size: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            border-radius: 10px;
+            border: 2px solid #FF0000;
+            box-shadow: 2px 2px 8px #FF0000;
+            background-color: rgb(70, 70, 70);
+            color: whitesmoke;
+            margin-bottom: 20px;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            text-align: center;
+            width: 100px;
+            height: 40px;
+            font-size: 18px;
+            font-family: 'Times New Roman', Times, serif;
+            background-color: rgb(0, 0, 0);
+            color: whitesmoke;
+            border-radius: 10px;
+            border: 2px solid #FF0000;
+            box-shadow: 2px 2px 8px #FF0000;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #8B0000;
+        }
+        
+        .calculate-button {
+            text-align: center;
+            width: 300px;
+            height: 50px;
+            font-size: 20px;
+            margin-top: 20px;
+            background-color: rgb(0, 0, 0);
+            color: whitesmoke;
+            border-radius: 10px;
+            border: 2px solid #FF0000;
+            box-shadow: 2px 2px 8px #FF0000;
+            cursor: pointer;
+        }
+        
+        .calculate-button:hover {
+            background-color: #8B0000;
+        }
+        
+        .label {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 18px;
+            color: whitesmoke;
+            text-shadow: 2px 2px 8px #FF0000;
+            margin-top: 20px;
+        }
+          
+    </style>
+</head>
+<body>
+    <div class="div1">
+        <h2 class="head">Versandrechner</h2>
+        <input id="weightInput" type="text" placeholder="Gewicht (g)" class="inputC" oninput="validateInput()">
+        <div class="buttons">
+            <button onclick="appendToInput(1)">1</button>
+            <button onclick="appendToInput(2)">2</button>
+            <button onclick="appendToInput(3)">3</button>
+            <button onclick="appendToInput(4)">4</button>
+            <button onclick="appendToInput(5)">5</button>
+            <button onclick="appendToInput(6)">6</button>
+            <button onclick="appendToInput(7)">7</button>
+            <button onclick="appendToInput(8)">8</button>
+            <button onclick="appendToInput(9)">9</button>
+            <button></button> <!-- Platzhalter für die leere linke Position -->
+            <button onclick="appendToInput(0)">0</button>
+            <button onclick="clearInput()">C</button>
+        </div>
+        <button class="calculate-button" onclick="calcShip()">Berechne Versandkosten</button>
+        <div id="result" class="label"></div>
+    </div>    
+    <script>
+        function appendToInput(value) {
+            const input = document.getElementById("weightInput");
+            input.value += value; // Zahl an das bestehende Eingabefeld anhängen
+        }
+        
+        function clearInput() {
+            document.getElementById("weightInput").value = ""; // Eingabefeld leeren
+            document.getElementById("result").innerHTML = ""; // Ergebnisfeld zurücksetzen
+        }
+        
+        function validateInput() {
+            const input = document.getElementById("weightInput");
+            input.value = input.value.replace(/[^0-9]/g, ""); // Nur Zahlen zulassen
+        }
+        
+        function calcShip() {
+            const costFirst100g = 3.73;
+            const costPerExtra100g = 2.00;
+            const input = document.getElementById("weightInput").value;
+        
+            // Sicherstellen, dass das Eingabefeld nicht leer ist
+            if (!input) {
+                document.getElementById("result").innerHTML = "Bitte Gewicht eingeben!";
+                return;
+            }
+        
+            const weight = parseFloat(input); // Gewicht in Gramm
+            let totalCost;
+        
+            if (weight <= 100) {
+                totalCost = costFirst100g; // Bis 100g kostet es fix 3.73€
+            } else {
+                const extraWeight = weight - 100; // Zusätzliches Gewicht über 100g
+                const extraUnits = Math.ceil(extraWeight / 100); // Zusätzliche 100g-Einheiten aufrunden
+                totalCost = costFirst100g + extraUnits * costPerExtra100g; // Versandkosten berechnen
+            }
+        
+            document.getElementById("result").innerHTML = `Versandkosten: €${totalCost.toFixed(2)}`;
+        }
+        
+    </script>
+</body>
+</html>
